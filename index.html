@@ -8,31 +8,26 @@
     <title>Document</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="assets/style.css">
 </head>
 
 <body>
 
-
-    <div class="container">
+    <div class="container grid">
         <h1>Giphy Search</h1>
-
-        <!-- Buttons will Get Dumped Here -->
-        <div id="buttonsblock"></div>
-
+        <div id="buttonsblock"></div><br>
         <form id="animal-form">
-            <label for="animal-input">Add a animal, Yo!</label>
+            <label for="animal-input">Search for a GIF</label>
             <input type="text" id="animal-input" /><br />
-
-            <!-- Button triggers new movie to be added -->
-            <input id="add-animal" type="submit" value="Add a animal, Yo!" />
+            <input id="add-animal" type="submit" value="Submit" />
         </form>
         <div id="animal-view"></div>
-
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.js"
         integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
     <script>
+        
 
         var animals = [
             "Lions",
@@ -40,10 +35,10 @@
             "Snakes",
             "Leopards"
         ];
-
-
         var giphy = "https://api.giphy.com/v1/gifs/search?q=ryan+gosling&api_key=wyzgUDBimVFKbOtXlyp9NVV61du38AtW&limit=10"
         var giphy = "http://api.giphy.com/v1/gifs/search?q=ryan+gosling&api_key=wyzgUDBimVFKbOtXlyp9NVV61du38AtW&limit=5"
+
+        displayButtons()
 
         $("#add-animal").on("click", function (event) {
             // event.preventDefault() prevents the form from trying to submit itself.
@@ -63,40 +58,36 @@
             $("#buttonsblock").empty()
             for (i = 0; i < animals.length; i++) {
                 var buttons = $('<button>');
-                buttons.addClass("animal");
+                buttons.addClass("animal btn btn-danger");
                 buttons.attr("data-name", animals[i])
+                buttons.attr("type", "button")
                 buttons.html(animals[i])
                 $('#buttonsblock').append(buttons)
             }
         }
-        displayButtons()
+
 
 
         function ajaxAnimal() {
-
-            //$.ajax({
-            //     url: giphy,
-            //     method: "GET",
-            //     dataType:'json',
-            // }).then(function(response){
-            //     console.log(response)
-            //     console.log(response.data[0].url)
-            //     var div = $("<div>").html("<img src =" + response.data[0].images.fixed_width.url + "></img>")
-            //     $("body").append(div)
-            //  })
             var animal = $(this).attr("data-name");
-            var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + animal + "&api_key=wyzgUDBimVFKbOtXlyp9NVV61du38AtW&limit=10";
+            var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + animal + "&api_key=wyzgUDBimVFKbOtXlyp9NVV61du38AtW&limit=5";
             $.ajax({
                 url: queryURL,
                 method: "GET"
             }).then(function (response) {
-                $("#animal-view").append("<img src =" + response.data[0].images.fixed_width.url + "></img>");
-                console.log(response)
-                console.log(this)
+                // $("#animal-view").append("<img src =" + response.data[0].images.fixed_height.url + "></img>");
+                // console.log(response)
+                // console.log(this)
+
+
+                for (var i=0; i<response.data.length; i++) {
+                    $("#animal-view").append("<img src =" + response.data[i].images.fixed_height.url + "></img>");
+                    console.log('click working')
+
+                }
+// flexbox relative and abosulute position
             });
-
         }
-
 
         //bringing in url of oject. how to retrieve item in object
         $(document).on("click", ".animal", ajaxAnimal);
